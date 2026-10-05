@@ -1,0 +1,2 @@
+# Ignore lcov-report folder
+packages/design-system-react/coverage/lcov-report/

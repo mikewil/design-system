@@ -1,0 +1,28 @@
+@import './../../../theme.css';
+
+.radioInput {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--color-neutrals-300);
+    border-radius: 50%;
+    transition: all 300ms;
+    cursor: pointer;
+    margin-top: 1px;
+}
+
+.radioButton {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.isDisabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.radioInput[data-pressed='true'] {
+    border-color: var(--color-secondary-200);
+    border: 2px solid var(--color-secondary-200);
+}

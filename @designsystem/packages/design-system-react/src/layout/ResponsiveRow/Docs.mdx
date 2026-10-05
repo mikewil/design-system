@@ -1,0 +1,62 @@
+import { Meta, Canvas } from '@storybook/addon-docs'
+import * as ResponsiveRowStories from './ResponsiveRow.stories'
+
+<Meta title="Layout/ResponsiveRow" component={ResponsiveRowStories.Default} />
+
+# ResponsiveRow
+
+The `ResponsiveRow` component is a flex container that wraps its children and sets default styles for a responsive layout.
+
+## Usage
+
+<Canvas of={ResponsiveRowStories.Default} sourceState="none" />
+
+```tsx
+<ResponsiveRow>
+    <Products_DesignSystemProduct size="S" />
+    <Text variant="header-2-low-emphasis">345 Products</Text>
+
+    <ResponsiveRow.WrapTogether>
+        <ResponsiveRow.Split />
+        <SolidSearch
+            searchMode="onKeyPressed"
+            horizontalAlignment="rightJustified"
+            isLoading={false}
+            onSearch={() => {}}
+            onCancel={() => {}}
+        />
+        <SolidButton buttonText="Button" />
+    </ResponsiveRow.WrapTogether>
+</ResponsiveRow>
+```
+
+## Aligning Items to the Right
+
+Use `ResponsiveRow.Split` to align items to the right side of the row.
+
+<Canvas of={ResponsiveRowStories.WithSplit} sourceState="none" />
+
+```tsx
+<ResponsiveRow {...args}>
+    <div style={boxStyle}>Left Item</div>
+    <ResponsiveRow.Split />
+    <div style={boxStyle}>Right Item</div>
+</ResponsiveRow>
+```
+
+## Keeping Items Together
+
+Use `ResponsiveRow.WrapTogether` to group items that should not wrap separately.
+
+<Canvas of={ResponsiveRowStories.WithWrapTogether} sourceState="none" />
+
+```tsx
+<ResponsiveRow>
+    <div style={boxStyle}>Item 1</div>
+    <ResponsiveRow.WrapTogether>
+        <div style={boxStyle}>Item 2</div>
+        <div style={boxStyle}>Item 3</div>
+    </ResponsiveRow.WrapTogether>
+    <div style={boxStyle}>Item 4</div>
+</ResponsiveRow>
+```

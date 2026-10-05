@@ -1,0 +1,40 @@
+import { Meta, Unstyled } from '@storybook/addon-docs'
+import { Text } from '../components/Typography/Text'
+
+<Meta title="Components/Typography" component={Text} />
+
+export const UText = ({ label, variant, style }) => (
+    <Unstyled>
+        <Text label={label} variant={variant} style={style}>
+            {label}
+        </Text>
+        <pre style={{ fontSize: 'small' }}>{variant}</pre>
+    </Unstyled>
+)
+
+# Typography
+
+| Ubuntu Fonts (Primary)                                                         | Verdana Fonts (Secondary)                                                      |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| <UText label="Header 1" variant="header1HighEmphasis" style="primary" />       | <UText label="Header 1" variant="header1HighEmphasis" style="secondary" />     |
+| <UText label="Header 2" variant="header2HighEmphasis" style="primary" />       | <UText label="Header 2" variant="header2LowEmphasis" style="secondary" />      |
+| <UText label="Header 2" variant="header2LowEmphasis" style="primary" />        | <UText label="Header 3" variant="header3LowEmphasis" style="secondary" />      |
+| <UText label="Header 3" variant="header3HighEmphasis" style="primary" />       | <UText label="Body 1" variant="body1LowEmphasis" style="secondary" />          |
+| <UText label="Header 3" variant="header3LowEmphasis" style="primary" />        | <UText label="Body 1" variant="body1HighEmphasis" style="secondary" />         |
+| <UText label="Body 1" variant="body1LowEmphasis" style="primary" />            | <UText label="Body 2" variant="body2LowEmphasis" style="secondary" />          |
+| <UText label="Body 1" variant="body1HighEmphasis" style="primary" />           | <UText label="Body 2" variant="body2HighEmphasis" style="secondary" />         |
+| <UText label="Body 2" variant="body2LowEmphasis" style="primary" />            | <UText label="Body 2" variant="body2Italics" style="secondary" />              |
+| <UText label="Body 2" variant="body2HighEmphasis" style="primary" />           | <UText label="Body 3" variant="body3LowEmphasis" style="secondary" />          |
+| <UText label="Body 2" variant="body2Italics" style="primary" />                | <UText label="Body 3" variant="body3HighEmphasis" style="secondary" />         |
+| <UText label="Body 3" variant="body3LowEmphasis" style="primary" />            | <UText label="Body 3" variant="body3Italics" style="secondary" />              |
+| <UText label="Body 3" variant="body3HighEmphasis" style="primary" />           | <UText label="Caption" variant="captionLowEmphasis" style="secondary" />       |
+| <UText label="Body 3" variant="body3Italics" style="primary" />                | <UText label="Overline 1" variant="overline1HighEmphasis" style="secondary" /> |
+| <UText label="Caption" variant="captionLowEmphasis" style="primary" />         | <UText label="Overline 2" variant="overline2HighEmphasis" style="secondary" /> |
+| <UText label="Overline 1" variant="overline1HighEmphasis" style="primary" />   | <UText label="Button" variant="buttonLowEmphasis" style="secondary" />         |
+| <UText label="Overline 1" variant="overline1MediumEmphasis" style="primary" /> | <UText label="Button" variant="buttonHighEmphasis" style="secondary" />        |
+| <UText label="Overline 2" variant="overline2HighEmphasis" style="primary" />   | <UText label="Link 1" variant="link1LowEmphasis" style="secondary" />          |
+| <UText label="Overline 2" variant="overline2MediumEmphasis" style="primary" /> | <UText label="Link 2" variant="link2LowEmphasis" style="secondary" />          |
+| <UText label="Button" variant="buttonLowEmphasis" style="primary" />           |                                                                                |
+| <UText label="Button" variant="buttonHighEmphasis" style="primary" />          |                                                                                |
+| <UText label="Button" variant="buttonUnderline1LowEmphasis" style="primary" /> |                                                                                |
+| <UText label="Button" variant="buttonUnderline2LowEmphasis" style="primary" /> |                                                                                |

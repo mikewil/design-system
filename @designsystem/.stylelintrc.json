@@ -1,0 +1,15 @@
+{
+  "overrides": [
+    {
+      "files": ["**/*.module.css", "pages/**/*.css"],
+      "rules": {
+        "selector-class-pattern": [
+          "^[a-z][a-zA-Z0-9]+$",
+          {
+            "message": "Class names must be written in camelCase."
+          }
+        ]
+      }
+    }
+  ]
+}

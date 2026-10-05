@@ -1,0 +1,125 @@
+@import './../../../theme.css';
+
+.solidButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Font */
+  color: var(--color-neutrals-0);
+  text-align: center;
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px; /* 114.286% */
+  letter-spacing: 1.25px;
+
+  /* Button */
+  background: var(--color-primary-0);
+  border-radius: var(--radii-radius-m);
+  z-index: 0;
+  position: relative;
+  border-width: 0;
+  min-width: 96px;
+  height: 40px;
+  padding: var(--spacing-spacing-3) var(--spacing-spacing-5);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-spacing-1, 4px);
+
+  span {
+    z-index: 1;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &::before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    border-radius: inherit;
+    z-index: 0;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.25);
+    transition: ease 0.2s;
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  &:hover::before {
+    clip-path: circle(100% at 50% 50%);
+    cursor: pointer;
+  }
+
+  &:active,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
+
+.solidButton.progress {
+  background: var(--color-primary-0);
+  &:hover::before {
+    background: var(--color-primary-0);
+    cursor: default;
+  }
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.solidButton.secondary {
+  color: var(--color-neutral-500);
+  background: var(--color-secondary-0);
+
+  &:hover {
+    background: var(--color-secondary-custom);
+  }
+}
+
+.solidButton.secondary.progress {
+  background: var(--color-secondary-0);
+  &:hover::before {
+    background: var(--color-secondary-0);
+    cursor: default;
+  }
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.solidButton.disabled {
+  background: var(--color-neutrals-300);
+  &:hover::before {
+    background: var(--color-neutrals-300);
+    cursor: default;
+  }
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.solidButtonIcon.followingImage {
+  height: var(--sizing-icon-xxxs);
+  width: var(--sizing-icon-xxxs);
+  margin-left: 4px;
+}
+
+.solidButtonIcon.leadingImage {
+  height: var(--sizing-icon-xxxs);
+  width: var(--sizing-icon-xxxs);
+  margin-right: 4px;
+}

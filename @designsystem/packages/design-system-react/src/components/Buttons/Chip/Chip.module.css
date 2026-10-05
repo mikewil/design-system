@@ -1,0 +1,114 @@
+@import './../../../theme.css';
+
+.chip.single {
+    /* Font */
+    color: var(--General-foreground-primary);
+    text-align: center;
+    font-family: Ubuntu;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px;
+
+    /* Chip */
+    display: inline-flex;
+    height: 32px;
+    padding: var(--spacing-spacing-2) var(--spacing-spacing-5);
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-spacing-1);
+    flex-shrink: 0;
+
+    border-radius: 16px;
+    border: 1px solid var(--general-outline-primary, --color-neutrals-300);
+    background: none;
+
+    &:active,
+    &:focus {
+        outline: none;
+    }
+}
+
+.chip.selected {
+    /* Font */
+    color: var(--general-foreground-light);
+    text-align: center;
+    font-family: Ubuntu;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px;
+
+    /* Chip */
+    display: inline-flex;
+    height: 32px;
+    padding: var(--spacing-spacing-2) var(--spacing-spacing-5);
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-spacing-1);
+    flex-shrink: 0;
+
+    border-radius: 16px;
+    border: 1px solid var(--actions-action-tertiary1);
+    background: var(--actions-action-tertiary1);
+}
+
+.chipIcon {
+    font-size: var(--sizing-icon-xxxs) !important;
+    margin-right: var(--spacing-spacing-1);
+}
+
+.chip.multiple {
+    /* Font */
+    text-align: center;
+    font-family: Ubuntu;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px;
+
+    /* Chip */
+    display: flex;
+    height: 32px;
+    justify-content: center;
+    align-items: stretch;
+    border-radius: 16px;
+    padding: 0;
+    border: 1px solid var(--general-outline-primary);
+    background: none;
+
+    &:active,
+    &:focus {
+        outline: none;
+    }
+}
+
+.chip.textContainer {
+    display: flex;
+    color: var(--general-foreground-primary);
+    align-items: center;
+    gap: var(--spacing-spacing-1);
+    padding: 0px var(--spacing-spacing-5);
+
+    /* Font */
+    font-family: Ubuntu;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 14px;
+}
+
+.closeIcon.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px var(--spacing-spacing-3) 0px var(--spacing-spacing-2);
+    border-left: 1px solid var(--general-divider);
+    height: 100%;
+}
+
+.closeIcon {
+    width: var(--sizing-icon-xxxs);
+    height: var(--sizing-icon-xxxs);
+    fill: var(--color-neutrals-300);
+}

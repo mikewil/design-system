@@ -1,0 +1,108 @@
+@import './../../../theme.css';
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0 0 0 / 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(var(--shadows-shadow-level1-blur));
+}
+
+.modal {
+  max-width: 50vw;
+  min-width: 285px;
+  background-color: var(--surfaces-surface-level1);
+  box-shadow: 0 8px 20px rgba(0 0 0 / 0.1);
+  border-radius: var(--radii-radius-l);
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  border-bottom-left-radius: var(--radii-radius-l);
+  border-bottom-right-radius: var(--radii-radius-l);
+
+  &:active,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
+
+.heading {
+  margin: var(--spacing-spacing-8);
+  margin-bottom: var(--spacing-spacing-6);
+  font-size: var(--font-size-xl);
+  line-height: 141.667%;
+}
+
+.content {
+  max-height: 280px;
+  min-height: 100px;
+  overflow: hidden;
+  overflow-y: auto;
+  margin: 0 var(--spacing-spacing-8);
+}
+
+.footer {
+  display: flex;
+  flex-direction: row-reverse;
+  column-gap: var(--spacing-spacing-3);
+  padding: var(--spacing-spacing-8);
+
+  &.scrollable {
+    padding-top: var(--spacing-spacing-6);
+    padding-bottom: var(--spacing-spacing-6);
+    box-shadow: 0 0 var(--shadows-shadow-level1-blur, 6px) 0 rgba(0, 0, 0, 0.16);
+    border-bottom-left-radius: var(--radii-radius-l);
+    border-bottom-right-radius: var(--radii-radius-l);
+  }
+}
+
+@media (max-width: 600px) {
+  .modal {
+    max-width: 100vw;
+    min-width: 100vw;
+    min-height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .dialog {
+    height: 100vh;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .heading {
+    flex: 0;
+  }
+
+  .content {
+    flex: 1;
+    max-height: none;
+    overflow: hidden;
+    overflow-y: auto;
+  }
+
+  .footer {
+    flex: 0;
+
+    &.scrollable {
+      border-radius: 0;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .modal {
+    max-width: 80vw;
+  }
+}

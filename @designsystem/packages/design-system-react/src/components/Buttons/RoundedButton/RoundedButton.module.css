@@ -1,0 +1,136 @@
+@import './../../../theme.css';
+
+.roundedButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle;
+  /* Font */
+  color: var(--general-foreground-light);
+  text-align: center;
+  border-radius: 20px;
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  font-family: Ubuntu;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 16px; /* 114.286% */
+  letter-spacing: 1.25px;
+
+  /* Button */
+  background: var(--actions-action-tertiary1);
+  border-radius: var(--radii-radius-xxl);
+  position: relative;
+  z-index: 0;
+  border-width: 0;
+  min-width: 96px;
+  height: 40px;
+  padding: var(--spacing-spacing-3) var(--spacing-spacing-3);
+  justify-content: center;
+  align-items: center;
+  gap: var(--Spacing-spacing-1, 4px);
+
+  span {
+    z-index: 1;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &::before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    border-radius: inherit;
+    width: 100%;
+    z-index: -1;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: color-mix(in srgb, var(--color-secondary-0) 25%, transparent);
+    transition: ease 0.2s;
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  &:hover::before {
+    clip-path: circle(100% at 50% 50%);
+    cursor: pointer;
+  }
+
+  &:active,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
+
+.roundedButton.progress {
+  line-height: 0px;
+  &:hover::before {
+    background: var(--actions-action-tertiary1);
+    cursor: default;
+  }
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.roundedButton.image {
+  padding: 0px;
+
+  &.sizeS {
+    --icon-button-width: calc(var(--sizing-icon-button-s) * 0.6);
+    min-width: var(--sizing-icon-button-s);
+    height: var(--sizing-icon-button-s);
+  }
+
+  &.sizeM {
+    --icon-button-width: calc(var(--sizing-icon-button-m) * 0.6);
+    min-width: var(--sizing-icon-button-m);
+    height: var(--sizing-icon-button-m);
+  }
+}
+
+.roundedButton.textimage {
+  --icon-button-width: calc(var(--sizing-icon-button-m) * 0.6);
+}
+
+.roundedButton.disabled {
+  color: var(--general-foreground-dark);
+  background: var(--color-neutrals-100);
+  &:hover::before {
+    background: var(--color-neutrals-100);
+    cursor: default;
+  }
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.iconWrapper > svg {
+  width: var(--icon-button-width);
+  height: var(--icon-button-width);
+}
+
+.badge {
+  position: absolute;
+  top: calc(40% - var(--icon-button-width) * 0.5);
+  right: calc(40% - var(--icon-button-width) * 0.5);
+  width: 6px;
+  height: 6px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.badgeWrapper {
+  position: relative;
+  height: var(--icon-button-width);
+  width: var(--icon-button-width);
+  align-content: center;
+}

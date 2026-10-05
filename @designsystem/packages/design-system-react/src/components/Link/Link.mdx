@@ -1,0 +1,37 @@
+import { Meta, Canvas, ArgTypes } from '@storybook/addon-docs'
+import { Link } from './Link'
+import { Standard, Click, SingleSpa } from './Link.stories'
+
+<Meta title="Components/Link" component={Link} />
+
+# Link
+
+The `Link` component wraps the `Text` component to provide link functionality with different types.
+
+## Examples
+
+### Single-SPA Link
+
+The SingleSpa link is a special link that is used to navigate within a single-spa application.
+It should be used for links that navigate to a different page within the same single-spa application.
+
+<Canvas of={SingleSpa} />
+
+### Click Link
+
+The onClick link provides a button that appears in the style of a link. This should be used for links that trigger an action
+(i.e., opening a dialog), but do not trigger navigattion to a different page or site.
+
+<Canvas of={Click} />
+
+### Standard Link
+
+This link is your standard link. Provide an href and a target and it will trigger a full browser navigation event.
+
+This should be used for links that navigate to a different page or site.
+
+<Canvas of={Standard} />
+
+## Props
+
+<ArgTypes of={Standard} />

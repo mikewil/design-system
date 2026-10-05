@@ -1,0 +1,36 @@
+@import './../../theme.css';
+
+.radioGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-spacing-4);
+}
+
+.radioButton {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-spacing-4);
+}
+
+input[type='radio']:checked {
+    background-color: var(--color-neutrals-0);
+}
+
+input[type='radio']:checked::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background-color: var(--color-secondary-200);
+    border-radius: 50%;
+    position: absolute;
+    transform: translate(40%, 40%);
+}
+.labelTitle {
+    font: var(--font-family-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-emphasis-high);
+    line-height: 20px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--color-neutrals-300);
+}

@@ -1,0 +1,6 @@
+version: 2
+storybook:
+    # Wait for the preview to be fully loaded before taking snapshots
+    waitForSelector: '#preview-decorator'
+    # Wait for 500ms after the preview is fully loaded before taking snapshots
+    waitForTimeout: 500

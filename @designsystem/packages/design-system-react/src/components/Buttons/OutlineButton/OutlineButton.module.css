@@ -1,0 +1,106 @@
+@import './../../../theme.css';
+
+.outlineButton {
+  display: inline-flex;
+  min-width: 96px;
+  height: 40px;
+  padding: var(--spacing-spacing-3) var(--spacing-spacing-5);
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radii-radius-m);
+  border: 1px solid var(--general-outline-primary);
+  background-color: inherit;
+
+  color: var(--general-foreground-primary);
+  text-align: center;
+  font-feature-settings:
+    'liga' off,
+    'clig' off;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-s);
+  font-style: var(--font-style-default);
+  font-weight: var(--font-weight-emphasis-high);
+  line-height: var(--line-height-default);
+  letter-spacing: 1.25px;
+
+  position: relative;
+
+  span {
+    z-index: 1;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &::before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    border-radius: inherit;
+    z-index: 0;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: var(--actions-action-tertiary-overlay);
+    opacity: 0.25;
+    transition: ease 0.2s;
+    clip-path: circle(0% at 50% 50%);
+  }
+
+  &:hover::before {
+    clip-path: circle(100% at 50% 50%);
+    cursor: pointer;
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
+  }
+}
+
+.outlineButton.disabled {
+  background-color: var(--general-outline-secondary);
+  color: var(--general-foreground-secondary);
+
+  &:hover::before {
+    cursor: default;
+  }
+
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.outlineButton.progress {
+  &:hover::before {
+    cursor: default;
+  }
+
+  span {
+    &:hover {
+      cursor: default;
+    }
+  }
+}
+
+.outlineButton.selection {
+  &.closed {
+    color: var(--general-foreground-secondary);
+    padding: var(--spacing-spacing-3) var(--spacing-spacing-3)
+      var(--spacing-spacing-3) var(--spacing-spacing-5);
+  }
+
+  &.open {
+    background-color: var(--color-neutrals-100);
+    border: 1px solid var(--color-neutrals-100);
+    padding: var(--spacing-spacing-3) var(--spacing-spacing-3)
+      var(--spacing-spacing-3) var(--spacing-spacing-5);
+  }
+}
+
+.buttonText {
+  width: var(--spacing-spacing-4);
+}

@@ -1,0 +1,178 @@
+@import './../../theme.css';
+
+.primary,
+.secondary {
+  margin: 0;
+  padding: 0;
+  font-weight: var(--font-weight-emphasis-low);
+}
+
+.primary {
+  font-family: var(--font-family-primary), sans-serif !important;
+}
+
+.secondary {
+  font-family: var(--font-family-secondary), sans-serif !important;
+}
+
+.inline {
+  display: inline;
+}
+
+/* Header */
+
+.header1HighEmphasis {
+  font-size: var(--font-size-xxl);
+  font-weight: var(--font-weight-emphasis-high);
+  line-height: 114.706%;
+}
+
+.header2LowEmphasis,
+.header2HighEmphasis {
+  font-size: var(--font-size-xl);
+  line-height: 141.667%;
+}
+
+.header3LowEmphasis,
+.header3HighEmphasis {
+  font-size: var(--font-size-l);
+  line-height: 140%;
+}
+
+/* Body */
+
+.body1LowEmphasis,
+.body1HighEmphasis {
+  font-size: var(--font-size-m);
+  line-height: 137.5%;
+}
+
+.body2LowEmphasis,
+.body2HighEmphasis,
+.body2Italics {
+  font-size: var(--font-size-m);
+  line-height: 137.5%;
+}
+
+.body3LowEmphasis,
+.body3HighEmphasis,
+.body3Italics {
+  font-size: var(--font-size-s);
+  line-height: 142.857%;
+}
+
+/* sm and up screens should have smaller font-sizes*/
+@media screen and (min-width: 600px) {
+  .body2LowEmphasis,
+  .body2HighEmphasis,
+  .body2Italics {
+    font-size: var(--font-size-s);
+    line-height: 142.857%;
+  }
+
+  .body3LowEmphasis,
+  .body3HighEmphasis,
+  .body3Italics {
+    font-size: var(--font-size-xs);
+    line-height: 116.667%;
+  }
+}
+
+/* Button */
+
+.buttonLowEmphasis,
+.buttonHighEmphasis {
+  font-size: var(--font-size-s);
+  letter-spacing: 0.078125rem;
+}
+
+.buttonUnderline1LowEmphasis {
+  font-size: var(--font-size-m);
+  line-height: 150%;
+}
+
+/* Overline */
+
+.overline1MediumEmphasis,
+.overline1HighEmphasis {
+  font-size: var(--font-size-s);
+  line-height: 142.857%;
+  letter-spacing: 0.075rem;
+  text-transform: uppercase;
+}
+
+.overline2MediumEmphasis,
+.overline2HighEmphasis {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-emphasis-high);
+  line-height: 166.667%;
+  letter-spacing: 0.075rem;
+  text-transform: uppercase;
+}
+
+/* Link */
+
+.link1LowEmphasis {
+  font-size: var(--font-size-m);
+  line-height: 150%;
+}
+
+.link2LowEmphasis {
+  font-size: var(--font-size-s);
+  line-height: 114.286%;
+}
+
+.link3LowEmphasis {
+  font-size: var(--font-size-xs);
+  line-height: 133.333%;
+}
+
+/* Caption */
+
+.captionLowEmphasis {
+  font-size: var(--font-size-xs);
+  line-height: 133.333%;
+}
+
+/* Emphasis */
+
+.header1HighEmphasis,
+.header2HighEmphasis,
+.header3HighEmphasis,
+.body1HighEmphasis,
+.body2HighEmphasis,
+.body3HighEmphasis,
+.overline1HighEmphasis,
+.overline2HighEmphasis,
+.buttonHighEmphasis {
+  font-weight: var(--font-weight-emphasis-high);
+}
+
+.header2LowEmphasis.secondary {
+  font-weight: var(--font-weight-emphasis-low);
+}
+
+.header3LowEmphasis.secondary {
+  font-weight: var(--font-weight-emphasis-high);
+}
+
+.overline1MediumEmphasis {
+  font-weight: var(--font-weight-emphasis-medium);
+}
+
+/* Italics */
+
+.body2Italics,
+.body3Italics {
+  font-style: italic;
+}
+
+/* Underline */
+
+.buttonUnderline1LowEmphasis,
+.buttonUnderline2LowEmphasis,
+.link1LowEmphasis,
+.link2LowEmphasis,
+.link3LowEmphasis {
+  text-decoration: underline;
+}

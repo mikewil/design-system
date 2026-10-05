@@ -1,0 +1,24 @@
+import { Canvas } from '@storybook/addon-docs'
+import * as FlexStories from './Flex.stories'
+
+# Flex
+
+> ℹ️ **NOTE** ℹ️
+>
+> This is a component for building advanced layouts. The majority of layouts you will want to be building with the more simple `Layout` component.
+
+## Introduction
+
+For more advanced layout control, we provide the flex component which allows you to control the layout of child components using flexbox.
+
+## Responsive layouts
+
+You can use the `Flex` component along with flex properties that are available on all components provided by this library to create Responsive
+layouts.
+
+For example, here we set the `flexBasis` property on these cards to be `{ S: '100%', M: '32%' }` so that they will be full width on small
+screens and 32% width on medium screens and above.
+
+<Canvas of={FlexStories.ResponsiveCardsWithFlex} />
+
+This is quite powerful as it allows you to create any layout that can be built by flexbox.

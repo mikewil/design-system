@@ -1,0 +1,344 @@
+trigger:
+    branches:
+        include:
+            - main
+    paths:
+        include:
+            - '/@designsystem/packages/design-system-react/*'
+        exclude:
+            - README.md
+            - docs
+            - .husky
+            - .vscode
+            - tslint.json
+            - tsconfig.json
+            - '**/*.md'
+            - '.husky'
+            - '.storybook'
+            - '.vscode'
+
+variables:
+    - group: Design System
+    - name: isMain
+      value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    # Terraform
+    - name: TF_VERSION
+      value: 1.4.6
+    - name: DESIGN_SYSTEM_REACT_PROJECT_PATH
+      value: '@designsystem/packages/design-system-react'
+    - name: WORKSPACE_PATH
+      value: '@designsystem'
+    - name: SELENIM_TEST_COMPONENTS_PROJECT_PATH
+      value: 'SeleniumTestComponents'
+
+pool:
+    vmImage: windows-latest
+
+resources:
+    repositories:
+        - repository: 'YAMLTemplates'
+          type: 'git'
+          name: 'Design System/DesignSystem.AzureDevOps.YamlTemplates'
+
+stages:
+    - stage: build_publish
+      displayName: CI Build and Publish
+      jobs:
+          - job: build_and_run_tests
+            displayName: 'CI Build and Run Tests'
+            steps:
+                - checkout: self
+                  clean: 'true'
+
+                - task: npmAuthenticate@0
+                  displayName: 'Authenticate to Azure NPM Repository'
+                  inputs:
+                      workingFile: './@designsystem/.npmrc'
+
+                - task: PowerShell@2
+                  displayName: check package version is not already published
+                  inputs:
+                      pwsh: true
+                      workingDirectory: $(DESIGN_SYSTEM_REACT_PROJECT_PATH)
+                      filePath: './@designsystem/build/checkPackageVersion.ps1'
+                  condition: succeeded()
+
+                - script: npm install
+                  displayName: Install dependencies
+                  workingDirectory: './@designsystem'
+
+                - script: npm run lint
+                  displayName: Running ESLint and Stylelint
+                  workingDirectory: './@designsystem'
+
+                - task: PowerShell@2
+                  displayName: 'CI Build storybook'
+                  inputs:
+                      pwsh: true
+                      targetType: 'inline'
+                      script: |
+                          cd "$(Build.SourcesDirectory)/@designsystem"
+                          npm install
+                          node check-figma.js $(FIGMA_TOKEN) $(DESIGN_KEY)
+                          if ($LASTEXITCODE -ne 0) {
+                            Write-Error "Node script failed."
+                            exit 1
+                          }
+                          npm run build:storybook
+
+                - script: npm run test
+                  displayName: Run jest code coverage
+                  workingDirectory: $(WORKSPACE_PATH)
+
+                - task: PublishCodeCoverageResults@1
+                  displayName: Publish code coverage results
+                  inputs:
+                      codeCoverageTool: Cobertura
+                      pathToSources: $(DESIGN_SYSTEM_REACT_PROJECT_PATH)
+                      summaryFileLocation: $(DESIGN_SYSTEM_REACT_PROJECT_PATH)/src/coverage/cobertura-coverage.xml
+
+                - script: npm run build:react
+                  displayName: Install dependencies and build workspaces
+                  workingDirectory: './@designsystem'
+
+                - task: Npm@1
+                  displayName: npm publish
+                  inputs:
+                      command: 'publish'
+                      publishRegistry: 'useFeed'
+                      publishFeed: 'DesignSystem'
+                      workingDir: $(DESIGN_SYSTEM_REACT_PROJECT_PATH)
+                  condition: and(succeeded(), eq(variables.isMain, true))
+
+                - script: npx figma connect publish --token $(FIGMA_TOKEN)
+                  displayName: Publish Figma components
+                  workingDirectory: $(DESIGN_SYSTEM_REACT_PROJECT_PATH)
+                  condition: and(succeeded(), eq(variables.isMain, true))
+
+          - job: visual_regression_tests
+            displayName: Visual Regression Tests
+            dependsOn: build_and_run_tests
+            steps:
+                - checkout: self
+                  clean: 'true'
+                - pwsh: npm install
+                  workingDirectory: $(WORKSPACE_PATH)
+                  displayName: 'npm install'
+                - pwsh: npm run percy
+                  workingDirectory: $(WORKSPACE_PATH)
+                  displayName: 'npm run percy'
+                  env:
+                      PERCY_TOKEN: $(PERCY_TOKEN)
+
+          - job: terraform_ci
+            displayName: Terraform CI
+            condition: and(succeeded(), eq(variables.isMain, false))
+            dependsOn: []
+            variables:
+                - group: Azure Telemetry DevOps Infrastructure Local - DEV
+                - name: environment
+                  value: dev
+            steps:
+                - checkout: self
+                  fetchDepth: 1
+                  clean: true
+                - task: TerraformInstaller@0
+                  displayName: 'Install terraform'
+                  inputs:
+                      terraformVersion: ${{ variables.TF_VERSION }}
+
+                - template: initialize-terraform-backend.yml@YAMLTemplates
+                  parameters:
+                      BasePath: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure
+                      ClientId: $(Telemetry_CLIENT_ID)
+                      ClientSecret: $(Telemetry_CLIENT_SECRET)
+                      Environment: ${{variables.environment}}
+                      StateFileName: $(STATE_FILE_NAME)
+                      StateStorageAccountContainerName: $(STORYBOOK_STATE_STORAGE_ACCOUNT_CONTAINER_NAME)
+                      StateStorageAccountName: $(STATE_STORAGE_ACCOUNT_NAME)
+                      StateStorageAccountResourceGroupName: $(STATE_STORAGE_ACCOUNT_RESOURCE_GROUP_NAME)
+                      StateStorageAccountSubscriptionId: $(Telemetry_SUBSCRIPTION_ID)
+                      TenantId: $(TENANT_ID)
+                - pwsh: terraform init
+                  displayName: terraform init
+                  workingDirectory: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure/environments/${{variables.environment}}
+                  failOnStderr: true
+                - pwsh: terraform plan -input=false
+                  displayName: terraform plan
+                  workingDirectory: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure/environments/${{variables.environment}}
+                  failOnStderr: true
+                  env:
+                      TF_VAR_tenant_id: $(TENANT_ID)
+                      TF_VAR_subscription_id: $(Telemetry_SUBSCRIPTION_ID)
+                      TF_VAR_service_principal_client_id: $(Telemetry_CLIENT_ID)
+                      TF_VAR_service_principal_client_secret: $(Telemetry_CLIENT_SECRET)
+                      TF_VAR_azure_client_id: $(STORYBOOK_AZURE_CLIENT_ID)
+                      TF_VAR_azure_client_secret: $(STORYBOOK_AZURE_CLIENT_SECRET)
+
+    - stage: publish_storybook
+      condition: and(succeeded(), eq(variables.isMain, true))
+      dependsOn: []
+      displayName: Publish Storybook
+      jobs:
+          - job: terraform_plan
+            displayName: Terraform CI
+            variables:
+                - group: Azure Telemetry DevOps Infrastructure Local - DEV
+                - name: environment
+                  value: dev
+            steps:
+                - checkout: self
+                  fetchDepth: 1
+                  clean: true
+                - task: TerraformInstaller@0
+                  displayName: 'Install terraform'
+                  inputs:
+                      terraformVersion: ${{ variables.TF_VERSION }}
+                - template: initialize-terraform-backend.yml@YAMLTemplates
+                  parameters:
+                      BasePath: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure
+                      ClientId: $(Telemetry_CLIENT_ID)
+                      ClientSecret: $(Telemetry_CLIENT_SECRET)
+                      Environment: ${{variables.environment}}
+                      StateFileName: $(STATE_FILE_NAME)
+                      StateStorageAccountContainerName: $(STORYBOOK_STATE_STORAGE_ACCOUNT_CONTAINER_NAME)
+                      StateStorageAccountName: $(STATE_STORAGE_ACCOUNT_NAME)
+                      StateStorageAccountResourceGroupName: $(STATE_STORAGE_ACCOUNT_RESOURCE_GROUP_NAME)
+                      StateStorageAccountSubscriptionId: $(Telemetry_SUBSCRIPTION_ID)
+                      TenantId: $(TENANT_ID)
+                - pwsh: terraform init
+                  displayName: terraform init
+                  workingDirectory: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure/environments/${{variables.environment}}
+                  failOnStderr: true
+                - pwsh: |
+                      terraform plan -input=false
+                      $tfPlan = terraform plan -json | ConvertFrom-Json
+                      $changes = ($tfPlan | ? { $_.type -eq "change_summary"}).changes
+                      $hasChanges = ($changes.add + $changes.change + $changes.remove) -gt 0
+
+                      Write-Host "##vso[task.setvariable variable=hasTerraformChanges;isOutput=true;]$hasChanges"
+
+                  displayName: terraform plan
+                  name: plan
+                  workingDirectory: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure/environments/${{variables.environment}}
+                  failOnStderr: true
+                  env:
+                      TF_VAR_tenant_id: $(TENANT_ID)
+                      TF_VAR_subscription_id: $(Telemetry_SUBSCRIPTION_ID)
+                      TF_VAR_service_principal_client_id: $(Telemetry_CLIENT_ID)
+                      TF_VAR_service_principal_client_secret: $(Telemetry_CLIENT_SECRET)
+                      TF_VAR_azure_client_id: $(STORYBOOK_AZURE_CLIENT_ID)
+                      TF_VAR_azure_client_secret: $(STORYBOOK_AZURE_CLIENT_SECRET)
+          - job: wait_for_validation
+            displayName: Wait for terraform plan validation
+            pool: server
+            timeoutInMinutes: 4320 # job times out in 3 days
+            dependsOn: terraform_plan
+            condition: and(succeeded(), eq(dependencies.terraform_plan.outputs['plan.hasTerraformChanges'], 'True'))
+            steps:
+                - task: ManualValidation@0
+                  timeoutInMinutes: 720 # task times out in 12 hours
+                  inputs:
+                      notifyUsers:
+                      instructions: 'Please validate the the results of terraform plan before continuing'
+                      onTimeout: reject
+          - deployment: storybook_terraform_deployment
+            displayName: terraform apply
+            environment: dev
+            dependsOn: wait_for_validation
+            variables:
+                - group: Azure Telemetry DevOps Infrastructure Local - DEV
+                - name: environment
+                  value: dev
+            strategy:
+                runOnce:
+                    deploy:
+                        steps:
+                            - checkout: self
+                              fetchDepth: 1
+                              clean: true
+                            - task: TerraformInstaller@0
+                              displayName: 'Install terraform'
+                              inputs:
+                                  terraformVersion: ${{ variables.TF_VERSION }}
+                            - template: initialize-terraform-backend.yml@YAMLTemplates
+                              parameters:
+                                  BasePath: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure
+                                  ClientId: $(Telemetry_CLIENT_ID)
+                                  ClientSecret: $(Telemetry_CLIENT_SECRET)
+                                  Environment: ${{variables.environment}}
+                                  StateFileName: $(STATE_FILE_NAME)
+                                  StateStorageAccountContainerName: $(STORYBOOK_STATE_STORAGE_ACCOUNT_CONTAINER_NAME)
+                                  StateStorageAccountName: $(STATE_STORAGE_ACCOUNT_NAME)
+                                  StateStorageAccountResourceGroupName: $(STATE_STORAGE_ACCOUNT_RESOURCE_GROUP_NAME)
+                                  StateStorageAccountSubscriptionId: $(Telemetry_SUBSCRIPTION_ID)
+                                  TenantId: $(TENANT_ID)
+                            - pwsh: terraform init
+                              displayName: terraform init
+                              workingDirectory: $(Build.SourcesDirectory)/$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/infrastructure/environments/${{variables.environment}}
+                              failOnStderr: true
+                            - pwsh: terraform apply -auto-approve -input=false
+                              displayName: terraform apply
+                              workingDirectory: $(Build.SourcesDirectory)/@designsystem/packages/design-system-react/infrastructure/environments/${{variables.environment}}
+                              failOnStderr: true
+                              env:
+                                  TF_VAR_tenant_id: $(TENANT_ID)
+                                  TF_VAR_subscription_id: $(Telemetry_SUBSCRIPTION_ID)
+                                  TF_VAR_service_principal_client_id: $(Telemetry_CLIENT_ID)
+                                  TF_VAR_service_principal_client_secret: $(Telemetry_CLIENT_SECRET)
+                                  TF_VAR_azure_client_id: $(STORYBOOK_AZURE_CLIENT_ID)
+                                  TF_VAR_azure_client_secret: $(STORYBOOK_AZURE_CLIENT_SECRET)
+
+          - job: storybook_build
+            displayName: Build Storybook
+            dependsOn: []
+            steps:
+                - checkout: self
+                  fetchDepth: 1
+                  clean: true
+                - pwsh: |
+                      cd "$(Build.SourcesDirectory)/@designsystem"
+                      npm install
+                      npm run build:storybook
+                  displayName: npm run build:storybook
+                - pwsh: |
+                      Copy-Item -Path "$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/staticwebapp.config.json" -Destination "$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/storybook-static/staticwebapp.config.json"
+                  displayName: Setup staticwebapp.config.json
+                - task: PublishPipelineArtifact@1
+                  inputs:
+                      targetPath: '$(DESIGN_SYSTEM_REACT_PROJECT_PATH)/storybook-static'
+                      artifact: 'storybook-static'
+                      publishLocation: 'pipeline'
+
+          - job: storybook_deployment
+            displayName: Deploy Storybook
+            pool:
+                vmImage: 'ubuntu-latest'
+            variables:
+                - group: Azure Telemetry DevOps Infrastructure Local - DEV
+            dependsOn:
+                - storybook_terraform_deployment
+                - terraform_plan
+                - wait_for_validation
+                - storybook_build
+            condition: |
+                and(
+                  eq(dependencies.terraform_plan.result, 'Succeeded'),
+                  eq(dependencies.storybook_build.result, 'Succeeded'),
+                  in(dependencies.wait_for_validation.result, 'Succeeded', 'Skipped'),
+                  in(dependencies.storybook_terraform_deployment.result, 'Succeeded', 'Skipped'),
+                  not(canceled())
+                )
+            steps:
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                      artifactName: 'storybook-static'
+                      targetPath: '$(Pipeline.Workspace)'
+
+                - task: AzureStaticWebApp@0
+                  inputs:
+                      app_location: '.' # App source code path relative to cwd
+                      skip_app_build: true
+                      cwd: $(Pipeline.Workspace)
+                  env:
+                      azure_static_web_apps_api_token: $(STORYBOOK_DEPLOYMENT_TOKEN)

@@ -1,0 +1,71 @@
+trigger:
+    branches:
+        include:
+            - main
+    paths:
+        include:
+            - '/@designsystem/packages/design-system-react-testing/*'
+        exclude:
+            - README.md
+            - docs
+            - .husky
+            - .vscode
+            - tslint.json
+            - tsconfig.json
+            - '**/*.md'
+            - '.husky'
+            - '.vscode'
+
+variables:
+    - group: Design System
+    - name: isMain
+      value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    - name: PROJECT_PATH
+      value: '@designsystem/packages/design-system-react-testing'
+
+pool:
+    vmImage: windows-latest
+
+resources:
+    repositories:
+        - repository: 'YAMLTemplates'
+          type: 'git'
+          name: 'Design System/DesignSystem.AzureDevOps.YamlTemplates'
+
+steps:
+    - checkout: self
+      clean: 'true'
+      path: s/self
+
+    - task: npmAuthenticate@0
+      displayName: 'Authenticate to Azure NPM Repository'
+      inputs:
+          workingFile: './@designsystem/.npmrc'
+
+    - task: PowerShell@2
+      displayName: check package version is not already published
+      inputs:
+          pwsh: true
+          workingDirectory: $(PROJECT_PATH)
+          filePath: './@designsystem/build/checkPackageVersion.ps1'
+
+    - script: npm ci
+      displayName: Install dependencies
+      workingDirectory: './@designsystem'
+
+    - script: npm run lint
+      displayName: Running ESLint
+      workingDirectory: './@designsystem'
+
+    - script: npm run build:prod
+      displayName: Build core components
+      workingDirectory: $(PROJECT_PATH)
+
+    - task: Npm@1
+      displayName: npm publish
+      inputs:
+          command: 'publish'
+          publishRegistry: 'useFeed'
+          publishFeed: 'DesignSystem'
+          workingDir: $(PROJECT_PATH)
+      condition: and(succeeded(), eq(variables.isMain, true))

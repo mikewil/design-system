@@ -1,0 +1,41 @@
+{
+  "name": "design-system-monorepo",
+  "type": "module",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build:prod -w @designsystem/design-system-react && npm run build:prod -w @designsystem/design-system-react-testing",
+    "build:react": "npm run build:prod -w @designsystem/design-system-react",
+    "build:testing": "npm run build:prod -w @designsystem/design-system-react-testing",
+    "build:storybook": "npm run build:prod -w @designsystem/design-system-react-testing && npm run build-storybook -w @designsystem/design-system-react",
+    "generate-icons": "npm run start -w icon-synchronizer -- --outputFolder ../design-system-react/src/icons",
+    "generate-icons:cleanup": "npm run lint -- --fix",
+    "storybook": "npm run build:prod -w @designsystem/design-system-react-testing && npm run storybook -w @designsystem/design-system-react",
+    "test": "npm run build:testing && npm run test -w @designsystem/design-system-react",
+    "pretty-staged": "pretty-quick --staged",
+    "format": "npm run format --workspaces",
+    "lint": "eslint packages/design-system-react/src/**/*.{js,tsx,ts,jsx} packages/design-system-react-testing/src/**/*.{js,ts,jsx,tsx} && npx stylelint packages/design-system-react/src/**/*.module.css",
+    "percy": "npm run build:storybook && percy storybook ./packages/design-system-react/storybook-static",
+    "prepare": "cd ../ && husky ./@designsystem/.husky"
+  },
+  "devDependencies": {
+    "@designsystem/design-system-react-testing": "^1.8.0",
+    "@percy/cli": "^1.30.4",
+    "@percy/storybook": "^6.0.3",
+    "@react-aria/optimize-locales-plugin": "^1.1.3",
+    "eslint": "^9.16.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^15.13.0",
+    "husky": "^9.1.7",
+    "stylelint": "^16.11.0",
+    "stylelint-config-standard": "^36.0.1",
+    "typescript-eslint": "^8.17.0"
+  },
+  "dependencies": {
+    "pretty-quick": "^4.0.0"
+  }
+}

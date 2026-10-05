@@ -1,0 +1,220 @@
+name: $(SourceBranchName)-$(BuildID)
+
+trigger: none
+
+pool:
+  name: Azure Pipelines
+  vmImage: "windows-latest"
+
+resources:
+  repositories:
+    - repository: "YAMLTemplates"
+      type: "git"
+      name: "Design System/DesignSystem.AzureDevOps.YamlTemplates"
+
+parameters:
+  - name: MajorRelease
+    type: boolean
+    default: false
+  - name: MinorRelease
+    type: boolean
+    default: false
+
+variables:
+  - name: BuildConfiguration
+    value: release
+  - name: SonarCloudOrg
+    value: designsystem
+  - name: system.debug
+    value: false
+  - name: ProjectName
+    value: SeleniumTestComponents
+  - name: SonarCloudProjectKey
+    value: DesignSystem.SeleniumTestComponents
+  - name: ProjectPath
+    value: $(Build.SourcesDirectory)/$(ProjectName)
+  - name: RootDirectory
+    value: $(Build.SourcesDirectory)/$(ProjectName)
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: UpdatedVersion
+    value: "."
+  - name: feedName
+    value: "DesignSystem"
+
+stages:
+  - stage: CI
+    displayName: CI Build
+    jobs:
+      - job: Job_1
+        displayName: CI Build
+        variables:
+          - group: DesignSystem - Users API - TF Secrets - DEV
+          - group: DesignSystem - B2C Testing - DEV
+          - group: DesignSystem - DesignSystem Portal App - DEV
+          - group: DesignSystem - Azure DevOps Infrastructure - Dev
+          - group: Azure DevOps Infrastructure - GLOBAL
+
+        steps:
+          - task: UseDotNet@2
+            displayName: Use .NET Core sdk 8.0
+            inputs:
+              version: 8.x
+
+          - checkout: self
+            fetchDepth: 0
+            clean: true
+
+          - template: begin-sonar-cloud-code-analysis.yml@YAMLTemplates
+            parameters:
+              projectName: $(SonarCloudProjectKey)
+              sonarCloudOrganization: $(SonarCloudOrg)
+              sonarCloudServiceEndpoint: $(ProjectName) CI
+              sourcesRootDirectory: $(RootDirectory)
+
+          - task: NuGetAuthenticate@1
+
+          - script: npm ci
+            displayName: Install dependencies and build workspaces
+            workingDirectory: '@designsystem'
+
+          - template: dotnet-restore-and-build.yml@YAMLTemplates
+            parameters:
+              BuildConfiguration: $(BuildConfiguration)
+              PathToProjects: "$(ProjectPath)/tests/SeleniumTestComponents.Tests/SeleniumTestComponents.Tests.csproj"
+
+          - task: BrowserStackConfig@0
+            inputs:
+              BrowserStackServiceEndPoint: 'Web BrowserStack Config'
+              browserstackLocal: true
+
+          - pwsh: |
+              # Start storybook in background
+              Start-Job { npm run storybook -- -- -p 8080 }
+
+              # Wait for storybook to start
+              Start-Sleep -Seconds 30
+
+              # Verify storybook is running
+              Invoke-RestMethod -Uri http://localhost:8080 -Method Get -RetryIntervalSec 10 -MaximumRetryCount 5 -Verbose | out-null
+
+              # Set the environment variable for the storybook URL
+              $env:STORYBOOK_HOST = "http://localhost:8080"
+
+              # Start the tests
+              dotnet test "$(ProjectPath)/tests/SeleniumTestComponents.Tests/SeleniumTestComponents.Tests.csproj" `
+                --logger trx `
+                --collect "XPlat Code Coverage" `
+                --configuration $(BuildConfiguration) `
+                --no-build `
+                --no-restore
+            displayName: "Run Tests"
+            workingDirectory: '@designsystem'
+            errorActionPreference: stop
+
+          - task: SonarCloudAnalyze@2
+            displayName: Run Code Analysis
+            inputs:
+              jdkversion: "JAVA_HOME_17_X64"
+
+          - task: SonarCloudPublish@2
+            displayName: Publish Quality Gate Result
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testRunner: VSTest
+              testResultsFiles: '**/*.trx'
+              publishRunAttachments: true
+
+          - task: PublishCodeCoverageResults@2
+            displayName: 'Publish code coverage report'
+            condition: succeededOrFailed()
+            inputs:
+              summaryFileLocation: '$(ProjectPath)/**/coverage.cobertura.xml'
+
+  - stage: Publish
+    condition: and(succeeded(), eq(variables.isMain, true))
+    dependsOn: []
+    displayName: Publish
+    jobs:
+      - job: Job_1
+        displayName: Create artifacts
+        steps:
+          - checkout: self
+            fetchDepth: 0
+            persistCredentials: true
+            clean: true
+
+          - task: NuGetAuthenticate@1
+
+          - task: UseDotNet@2
+            displayName: "Use .NET Core sdk"
+            inputs:
+              version: 8.x
+
+          - template: dotnet-nuget-build-and-publish.yml@YAMLTemplates
+            parameters:
+              ArtifactName: drop
+              BuildConfiguration: $(BuildConfiguration)
+              PathToProjects: "$(ProjectPath)/src/SeleniumTestComponents/SeleniumTestComponents.csproj"
+              PathToPublishProject: "$(ProjectPath)/src/SeleniumTestComponents/SeleniumTestComponents.csproj"
+
+          - template: dotnet-nuget-publish.yml@YAMLTemplates
+            parameters:
+              packagesToPack: "$(ProjectPath)/src/SeleniumTestComponents/SeleniumTestComponents.csproj"
+              ArtifactName: packages
+              UpdatedVersion: $(UpdatedVersion)
+              MajorRelease: ${{parameters.MajorRelease}}
+              MinorRelease: ${{parameters.MinorRelease}}
+
+  - stage: PublishPrereleaseNuGetPackage
+    displayName: "Publish Prerelease NuGet Package"
+    condition: and(succeeded(), eq(variables.isMain, true))
+    dependsOn:
+      - Publish
+    jobs:
+      - deployment: nugetPrereleasePublish
+        displayName: "Nuget - Prerelease Publish"
+        environment: artifact_prerelease
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+
+                - download: current
+                  artifact: "packages"
+
+                - task: NuGetCommand@2
+                  displayName: "Push NuGet Package"
+                  inputs:
+                    command: "push"
+                    packagesToPush: "$(Pipeline.Workspace)/packages/prereleases/*.nupkg;!$(Pipeline.Workspace)/packages/prereleases/*.symbols.nupkg"
+                    nuGetFeedType: "internal"
+                    publishVstsFeed: "$(feedName)"
+
+  - stage: "PublishNuGetPackage"
+    displayName: "Publish SeleniumTestComponents NuGet Package"
+    dependsOn: "PublishPrereleaseNuGetPackage"
+    condition: succeeded()
+    jobs:
+      - deployment: nugetPublish
+        displayName: "Nuget - Publish"
+        environment: artifact_release
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: none
+
+                - download: current
+                  artifact: "packages"
+
+                - task: NuGetCommand@2
+                  displayName: "Push SeleniumTestComponents NuGet Package"
+                  inputs:
+                    command: "push"
+                    packagesToPush: "$(Pipeline.Workspace)/packages/releases/*.nupkg;!$(Pipeline.Workspace)/packages/releases/*.symbols.nupkg"
+                    nuGetFeedType: "internal"
+                    publishVstsFeed: "$(feedName)"

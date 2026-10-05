@@ -1,0 +1,12 @@
+{
+    "jest.virtualFolders": [
+        {
+            "name": "design-system-react",
+            "rootPath": "packages/design-system-react"
+        }
+    ],
+    "jest.jestCommandLine": "npm run test --",
+    "files.associations": {
+        "**/azure-pipeline.yml": "azure-pipelines"
+    }
+}

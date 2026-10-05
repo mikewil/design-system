@@ -1,0 +1,18 @@
+{
+    "codeConnect": {
+        "parser": "react",
+        "include": [
+            "src/animations/**/*.tsx",
+            "src/components/**/*.tsx",
+            "src/icons/**/*.tsx",
+            "figma/**"
+        ],
+        "exclude": ["test/**", "docs/**", "build/**"],
+        "importPaths": {
+            "*": "@designsystem/design-system-react"
+        },
+        "paths": {
+            "@interfaces/*": ["src/interfaces/*"]
+        }
+    }
+}

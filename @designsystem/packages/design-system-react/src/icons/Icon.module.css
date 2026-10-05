@@ -1,0 +1,53 @@
+@import '../theme.css';
+
+.iconSizeXXXS {
+    height: var(--sizing-icon-xxxs);
+    width: var(--sizing-icon-xxxs);
+    font-size: var(--sizing-icon-xxxs);
+}
+.iconSizeXXS {
+    height: var(--sizing-icon-xxs);
+    width: var(--sizing-icon-xxs);
+    font-size: var(--sizing-icon-xxs);
+}
+.iconSizeXS {
+    height: var(--sizing-icon-xs);
+    width: var(--sizing-icon-xs);
+    font-size: var(--sizing-icon-xs);
+}
+.iconSizeS {
+    height: var(--sizing-icon-s);
+    width: var(--sizing-icon-s);
+    font-size: var(--sizing-icon-s);
+}
+.iconSizeM {
+    height: var(--sizing-icon-m);
+    width: var(--sizing-icon-m);
+    font-size: var(--sizing-icon-m);
+}
+.iconSizeL {
+    height: var(--sizing-icon-l);
+    width: var(--sizing-icon-l);
+    font-size: var(--sizing-icon-l);
+}
+.iconSizeXL {
+    height: var(--sizing-icon-xl);
+    width: var(--sizing-icon-xl);
+    font-size: var(--sizing-icon-xl);
+}
+.iconSizeXXL {
+    height: var(--sizing-icon-xxl);
+    width: var(--sizing-icon-xxl);
+    font-size: var(--sizing-icon-xxl);
+}
+.iconSizeXXXL {
+    height: var(--sizing-icon-xxxl);
+    width: var(--sizing-icon-xxxl);
+    font-size: var(--sizing-icon-xxxl);
+}
+
+.icon {
+    transition: transform 0.3s ease-out;
+    transform-origin: center;
+    stroke-dasharray: none;
+}

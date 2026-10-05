@@ -1,0 +1,232 @@
+import { Canvas, ArgTypes } from '@storybook/addon-docs'
+import * as StandardTableStories from './StandardTable.stories'
+import * as StandardTableHeaderStories from './StandardTableHeader.stories'
+import * as StandardTableBodyStories from './StandardTableBody.stories'
+import * as StandardTableColumnStories from './StandardTableColumn.stories'
+import * as StandardTableRowStories from './StandardTableRow.stories'
+import * as StandardTableCellStories from './StandardTableCell.stories'
+import { stylingPropNames } from '../../utils/useStyles.types'
+
+`StandardTable` provides a design compliant table that supports infinite scrolling, sorting, responsive design, selection, and actions.
+
+## Responsive
+
+The table is responsive by default. It handles this on extra small screens (600px and below) by hiding all columns except for the first.
+
+To try it out, open <a href="./iframe.html?globals=&args=&id=components-standardtable--default" target="_blank">the standard story in a new tab</a> and resize your browser.
+
+## Style Variations
+
+### Standard
+
+The default table style is `'Standard'`:
+
+<Canvas of={StandardTableStories.Default} />
+
+### Alternating Rows
+
+To apply alternating row styles to the table, set the `variant` prop to `'Alternating Rows'`:
+
+<Canvas of={StandardTableStories.AlternatingRows} />
+
+## Column Types
+
+We've created column types for each of the standard use cases. You can use these column types to quickly create a table with the desired column type.
+
+### Default
+
+<Canvas of={StandardTableColumnStories.Default} />
+
+### Sortable
+
+The `StandardTable.Column` supports sorting functionality. Provide an `onSortChange` callback to enable sorting, and control the sort direction with the `sortDirection` prop.
+
+<Canvas of={StandardTableColumnStories.Sortable} />
+
+### Icon
+
+IconColumns are used when the content of a particular column is going to just be an icon.
+
+<Canvas of={StandardTableColumnStories.IconColumns} />
+
+## Loading Data
+
+The body supports two types of loading data: auto loading and manual loading.
+When `isLoading` is set to `true`, the loading spinner is displayed at the bottom of the table.
+When `hasMore` is set to `true`, the loading spinner is displayed at the bottom of the table,
+and the `loadMore` function is called when the user scrolls to the bottom of the table.
+
+### Infinite Scrolling - Load as you scroll
+
+<Canvas of={StandardTableBodyStories.InfiniteScroll} />
+
+### Infinite Scrolling - Manual loading
+
+<Canvas of={StandardTableBodyStories.InfiniteScrollManual} />
+
+## Row Types
+
+### Standard
+
+<Canvas of={StandardTableRowStories.Default} />
+
+### Clickable
+
+When `onClick` is provided to a `StandardTable.Row`, it becomes clickable, and an extra column with a caret icon is automatically added to the end of the row. The header adjusts accordingly to maintain alignment.
+
+<Canvas of={StandardTableRowStories.RowClick} />
+
+### Rows with Status Indicators
+
+The `StandardTable.Row` supports a `status` prop to visually indicate the status of the row. When `status` is set, a colored bar appears on the left of the first cell.
+
+<Canvas of={StandardTableRowStories.StatusRows} />
+
+### Selectable
+
+The `StandardTable.Row` supports selection functionality. When `onSelect` and `isSelected` are provided, the row becomes selectable. The selected row displays a blue bar on the left and changes its background color.
+
+<Canvas of={StandardTableRowStories.SelectableRows} />
+
+## Cell Types
+
+We've created cell types for each of the standard use cases. You can use these cell types to quickly create a table with the desired cell type.
+
+### Text
+
+Used when the content of a particular cell is going to be text.
+
+<Canvas of={StandardTableCellStories.TextCells} />
+
+### Subtitle
+
+Used when the content of a particular cell is going to be a subtitle.
+
+<Canvas of={StandardTableCellStories.SubtitleCells} />
+
+### Icon
+
+Used when the content of a particular cell is going to be an icon.
+
+<Canvas of={StandardTableCellStories.IconCells} />
+
+### Icon and Text
+
+Used when the content of a particular cell is going to be an icon and text.
+
+<Canvas of={StandardTableCellStories.IconTextCells} />
+
+### Icon and Subtitle
+
+Used when the content of a particular cell is going to be an icon and a subtitle.
+
+<Canvas of={StandardTableCellStories.IconSubtitleCells} />
+
+## Props
+
+### StandardTable
+
+<ArgTypes of={StandardTableStories.Default} exclude={stylingPropNames} />
+
+### Header
+
+<ArgTypes of={StandardTableHeaderStories.Default} exclude={stylingPropNames} />
+
+### Column
+
+<ArgTypes of={StandardTableColumnStories.Default} exclude={stylingPropNames} />
+
+### Body
+
+<ArgTypes of={StandardTableBodyStories.Default} exclude={stylingPropNames} />
+
+### Cell
+
+<ArgTypes of={StandardTableCellStories.TextCells} exclude={stylingPropNames} />
+
+## Testing
+
+The design system provides a `StandardTableTester` utility to make testing tables easier and more reliable.
+
+### Jest Testing
+
+Here's an example of how to use the `StandardTableTester` in your tests:
+
+```ts
+import { StandardTableTester } from '@designsystem/design-system-react-testing'
+
+// Example usage in a test
+const user = userEvent.setup()
+const table = screen.getByRole('table')
+const tester = new StandardTableTester(user, table)
+
+// Wait for any loading to finish
+//  - This will wait for the loading spinner to disappear
+//  - You won't need this very often as `getRows` will wait for loading to finish automatically
+await tester.waitForLoadingToFinish()
+
+// Get all rows and interact with them
+const rows = await tester.getRows()
+await rows[0].click()
+
+// Check cell content
+const cell = rows[0].getCell('Name')
+expect(cell).toHaveTextContent('John')
+
+// Check row status
+expect(rows[0].getStatus()).toBe('Warning')
+
+// Sort a column
+await tester.triggerSort('Name')
+```
+
+### Selenium Testing
+
+We provide `StandardTableComponentManager` and `StandardTableRowComponentManager` to help with Selenium UI testing.
+
+#### Initialization
+
+Initialize the component by finding the table element and creating an instance of `StandardTableComponentManager`:
+
+```csharp
+new StandardTableComponentManager(
+    this.Wait.Until(d => d.FindElement(By.CssSelector("[data-testid=table]"))),
+    this.webDriver
+)
+```
+
+#### Checking if the table is loading
+
+```csharp
+bool isLoading = this.tableManager.IsLoading
+```
+
+#### Waiting for loading to finish
+
+```csharp
+this.tableManager.WaitForLoadingToFinish()
+```
+
+#### Getting all rows
+
+```csharp
+var rows = this.tableManager.GetRows()
+```
+
+#### Interacting with a row
+
+```csharp
+rows[0].Click()
+```
+
+#### Getting a cell by column name
+
+```csharp
+var cell = rows[0].GetCell("Name")
+```
+
+#### Getting the status of a row
+
+```csharp
+RowStatus status = rows[0].Status
+```

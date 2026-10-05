@@ -1,0 +1,26 @@
+@import './../../theme.css';
+
+.bar {
+    border-radius: 5px;
+    background-color: var(--general-outline-secondary);
+    margin-bottom: var(--spacing-spacing-1);
+}
+
+.barFill {
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+}
+
+.barFillwarning {
+    background-color: var(--color-notifications-yellow-100);
+}
+.barFillerror {
+    background-color: var(--color-notifications-red-100);
+}
+.barFillsuccess {
+    background-color: var(--color-notifications-green-100);
+}
+.barFillinformation {
+    background-color: var(--color-notifications-blue-100);
+}

@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12</LangVersion>
+    <IsPackable>false</IsPackable>
+    <!--
+        Make sure any documentation comments which are included in code get checked for syntax during the build, but do
+        not report warnings for missing comments.
+        CS1573: Parameter 'parameter' has no matching param tag in the XML comment for 'parameter' (but other parameters do)
+        CS1591: Missing XML comment for publicly visible type or member 'Type_or_Member'
+        CS1712: Type parameter 'type_parameter' has no matching typeparam tag in the XML comment on 'type_or_member' (but other type parameters do)
+        -->
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn),1573,1591,1712</NoWarn>
+    <!--SonarCloud requires ProjectGuid to run-->
+    <ProjectGuid>30f3d4c5-5c75-4d61-81ff-c12c56d9600b</ProjectGuid>
+    <UserSecretsId>f8f4e90b-d711-4c3d-871c-0c22541b827e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TF_BUILD)' == 'true'">
+    <PackageReference Include="BrowserStack.TestAdapter" Version="0.*" />
+    <PackageReference Include="BrowserStackLocal" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
+    <PackageReference Include="MartinCostello.BrowserStack.Automate" Version="4.0.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
+    <PackageReference Include="CodeStyle.Tests" Version="1.0.0" />
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="*" />
+    <PackageReference Include="coverlet.msbuild" Version="6.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="xunit" Version="2.*" />
+    <PackageReference Include="Xunit.DependencyInjection" Version="9.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SeleniumTestComponents\SeleniumTestComponents.csproj" />
+  </ItemGroup>
+
+  <Target Name="BuildStorybook" AfterTargets="CopyFilesToOutputDirectory">
+    <Exec WorkingDirectory="$(ProjectDir)/../../../@designsystem" Command="npm run build:storybook -- -- -o &quot;$(ProjectDir)$(BaseOutputPath)/$(Configuration)/storybook-static&quot;" />
+  </Target>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.local.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

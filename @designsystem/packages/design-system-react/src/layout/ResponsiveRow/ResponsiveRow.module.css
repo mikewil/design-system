@@ -1,0 +1,22 @@
+.responsiveRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+    & > .responsiveRowWrapTogether:last-child {
+        flex-grow: 1;
+    }
+}
+
+.responsiveRowSplit {
+    margin-left: auto;
+}
+
+.responsiveRowWrapTogether {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+}

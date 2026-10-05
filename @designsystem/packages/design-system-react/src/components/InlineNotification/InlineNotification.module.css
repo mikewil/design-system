@@ -1,0 +1,109 @@
+@import './../../theme.css';
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  width: 100%;
+}
+
+.leftItems {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--spacing-spacing-3, 4px);
+  width: 100%;
+}
+
+.inlineNotification {
+  display: flex;
+  flex-direction: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 24px;
+  padding: var(--spacing-spacing-3, 12px);
+  align-items: center;
+  align-content: center;
+  gap: var(--spacing-spacing-1, 4px) var(--spacing-spacing-2, 8px);
+  border-radius: var(--radii-radius-m, 8px);
+  background: var(--Notifications-notification-information-tint);
+  color: var(--general-foreground-dark);
+}
+
+.leftHeader {
+  display: flex;
+  padding: var(--spacing-spacing-2, 8px) var(--spacing-spacing-3, 12px);
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-spacing-2, 8px);
+  align-self: stretch;
+  background: var(--Safety-safety-danger, #bd2024);
+  border-radius: 8px 0px 0px 8px;
+  color: var(--general-foreground-dark);
+}
+
+.closeIcon {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+.inlineNotificationinformation {
+  background: var(--notifications-notification-information-tint);
+}
+
+.inlineNotificationsuccess {
+  background: var(--notifications-notification-success-tint);
+}
+
+.inlineNotificationlowpriority {
+  background: var(--notifications-notification-lowprioritytint);
+}
+
+.inlineNotificationhighpriority {
+  background: var(--notifications-notification-highpriority-tint);
+}
+
+.inlineNotificationlighpriority {
+  background: var(--notifications-notification-highpriority-tint);
+}
+
+.inlineNotificationsafetynotice {
+  background: var(--safety-safety-notice-tint);
+  border-radius: 0px 8px 8px 0px;
+}
+
+.leftHeadersafetynotice {
+  color: var(--general-foreground-light);
+  background: var(--safety-safety-notice);
+}
+
+.inlineNotificationsafetycaution {
+  background: var(--notifications-notification-lowprioritytint);
+  border-radius: 0px 8px 8px 0px;
+}
+
+.leftHeadersafetycaution {
+  background: var(--safety-safety-caution);
+}
+
+.inlineNotificationsafetywarning {
+  background: var(--safety-safety-warning-tint);
+  border-radius: 0px 8px 8px 0px;
+}
+
+.leftHeadersafetywarning {
+  background: var(--safety-safety-warning);
+}
+
+.inlineNotificationsafetydanger {
+  background: var(--notifications-notification-highpriority-tint);
+  border-radius: 0px 8px 8px 0px;
+}
+
+.leftHeadersafetydanger {
+  color: var(--general-foreground-light);
+  background: var(--safety-safety-danger);
+}

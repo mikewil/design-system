@@ -1,0 +1,148 @@
+import { Meta } from '@storybook/addon-docs'
+
+<Meta title="Styling" />
+
+# Styling
+
+## Introduction
+
+Components are designed to be **consistent** across all Connected Solutions applications. They include built-in styling that has been
+considered carefully, and extensively tested. In general, customing the design system components should be avoided, but most components
+do offer control over some simple styling options including:
+
+-   Layout
+-   Spacing
+-   Color
+-   Sizing
+-   Positioning
+
+How those are implemented is laid out below
+
+## Spacing
+
+The spacing the design team uses in their design system is based off of variables called `spacing-x` with `x` being a number from 0 to 15.
+These variables are used to define the padding and margin of components.
+
+We expose these variables to developers in React via several props that should be available on all components.
+
+These props can be set as follows:
+
+```jsx
+import { SolidButton } from '@designsystem/design-system-react'
+;<SolidButton margin="spacing-2">Click Me</SolidButton>
+```
+
+The spacing props can also be responsive, meaning you can set different spacings for different screen sizes.
+
+```jsx
+import { SolidButton } from '@designsystem/design-system-react'
+;<SolidButton margin={{ base: 'spacing-0', L: 'spacing-2' }}>
+    Click Me
+</SolidButton>
+```
+
+### Spacing Props
+
+| name          | type                  | optional | default | description                                                                                                                                                             |
+| ------------- | --------------------- | -------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| margin        | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for all four sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin).                                                       |
+| marginStart   | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for the logical start side of the element, depending on layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-inline-start).   |
+| marginEnd     | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for the logical end side of an element, depending on layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-inline-end).        |
+| marginTop     | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for the top side of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-top).                                                     |
+| marginBottom  | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for the bottom side of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-bottom).                                               |
+| marginX       | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for both the left and right sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin).                                        |
+| marginY       | `Responsive<Spacing>` | `true`   | `n/a`   | The margin for both the top and bottom sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/margin).                                        |
+| padding       | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for all four sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding).                                                     |
+| paddingStart  | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for the logical start side of the element, depending on layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-inline-start). |
+| paddingEnd    | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for the logical end side of an element, depending on layout direction. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-inline-end).      |
+| paddingTop    | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for the top side of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-top).                                                   |
+| paddingBottom | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for the bottom side of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-bottom).                                             |
+| paddingX      | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for both the left and right sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding).                                      |
+| paddingY      | `Responsive<Spacing>` | `true`   | `n/a`   | The padding for both the top and bottom sides of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/padding).                                      |
+
+## Color Props
+
+The color props allow you to set various colors for the element using the design system's predefined color values.
+
+### Available Color Props
+
+-   `color`: Sets the text color of the element.
+-   `backgroundColor`: Sets the background color of the element.
+-   `borderColor`: Sets the border color of the element.
+
+### Color Values
+
+The color values are defined in the `Colors` enum. The available values are:
+
+```ts
+export type Colors =
+    | 'General/foreground-primary'
+    | 'General/foreground-secondary'
+    | 'General/foreground-light'
+    | 'General/foreground-dark'
+    | 'General/outline-primary'
+    | 'General/outline-secondary'
+    | 'General/divider'
+    | 'General/divider-shadow-supplement'
+    | 'General/alternatingrow-surface'
+    | 'Surfaces/surface-background'
+    | 'Surfaces/surface-level1'
+    | 'Surfaces/surface-level2'
+    | 'Surfaces/surface-level3'
+    | 'Surfaces/surface-level4'
+    | 'Surfaces/surface-level1-alt'
+    | 'Surfaces/surface-level2-alt'
+    | 'Surfaces/surface-level3-alt'
+    | 'Surfaces/surface-level4-alt'
+    | 'Actions/action-primary'
+    | 'Actions/action-secondary-level2'
+    | 'Actions/action-tertiary1'
+    | 'Actions/action-tertiary2'
+    | 'Actions/action-tertiary3'
+    | 'Actions/action-tertiary4'
+    | 'Actions/action-primary-overlay'
+    | 'Actions/action-secondary-overlay'
+    | 'Actions/action-tertiary-overlay'
+    | 'Navigation/navigation-background'
+    | 'Navigation/navigation-primary'
+    | 'Navigation/navigation-secondary'
+    | 'Navigation/navigation-tertiary'
+    | 'Navigation/navigation-surface-hover'
+    | 'Navigation/navigation-surface-select'
+    | 'Notifications/notification-highpriority'
+    | 'Notifications/notification-highpriority-tint'
+    | 'Notifications/notification-lowpriority'
+    | 'Notifications/notification-lowprioritytint'
+    | 'Notifications/notification-information'
+    | 'Notifications/notification-information-tint'
+    | 'Notifications/notification-success'
+    | 'Notifications/notification-success-tint'
+    | 'Safety/safety-danger'
+    | 'Safety/safety-tint'
+    | 'Safety/safety-warning'
+    | 'Safety/safety-warning-tint'
+    | 'Safety/safety-notice'
+    | 'Safety/safety-notice-tint'
+    | 'Illustrations/illustration-stroke'
+    | 'Illustrations/illustration-fill-primary'
+    | 'Illustrations/illustration-fill-secondary'
+    | 'Illustrations/illustration-fill-tertiary'
+    | 'Illustrations/illustration-accent'
+```
+
+### Examples
+
+You can set these props as follows:
+
+```jsx
+import { SolidButton } from '@designsystem/design-system-react'
+;<SolidButton color="General/foreground-primary">Click Me</SolidButton>
+```
+
+### Color Props
+
+| name            | type     | optional | default | description                                                                                                        |
+| --------------- | -------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------ |
+| color           | `Colors` | `true`   | `n/a`   | The background color of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color). |
+| backgroundColor | `Colors` | `true`   | `n/a`   | The color of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/color).                       |
+| borderColor     | `Colors` | `true`   | `n/a`   | The border color of the element. See [MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/border-color).         |

@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup Label="Build">
+    <LangVersion>10</LangVersion>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Package">
+    <Company>DesignSystem</Company>
+    <PackageProjectUrl>https://dev.azure.com/DesignSystem/DesignSystem/_git/DesignSystem</PackageProjectUrl>
+    <RepositoryUrl>https://DesignSystem@dev.azure.com/DesignSystem/DesignSystem/_git/DesignSystem</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+</Project>

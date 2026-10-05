@@ -1,0 +1,49 @@
+@import '../../theme.css';
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-data-light-blue);
+  color: var(--color-data-blue);
+}
+
+.iconContainerSizeXXS {
+  height: var(--sizing-encapsulated-icon-xxs);
+  width: var(--sizing-encapsulated-icon-xxs);
+  font-size: var(--sizing-encapsulated-icon-xxs);
+}
+.iconContainerSizeXS {
+  height: var(--sizing-encapsulated-icon-xs);
+  width: var(--sizing-encapsulated-icon-xs);
+  font-size: var(--sizing-encapsulated-icon-xs);
+}
+.iconContainerSizeS {
+  height: var(--sizing-encapsulated-icon-s);
+  width: var(--sizing-encapsulated-icon-s);
+  font-size: var(--sizing-encapsulated-icon-s);
+}
+.iconContainerSizeM {
+  height: var(--sizing-encapsulated-icon-m);
+  width: var(--sizing-encapsulated-icon-m);
+  font-size: var(--sizing-encapsulated-icon-m);
+}
+.iconContainerSizeL {
+  height: var(--sizing-encapsulated-icon-l);
+  width: var(--sizing-encapsulated-icon-l);
+  font-size: var(--sizing-encapsulated-icon-l);
+}
+.iconContainerSizeXL {
+  height: var(--sizing-encapsulated-icon-xl);
+  width: var(--sizing-encapsulated-icon-xl);
+  font-size: var(--sizing-encapsulated-icon-xl);
+}
+.iconContainerSizeXXL {
+  height: var(--sizing-encapsulated-icon-xxl);
+  width: var(--sizing-encapsulated-icon-xxl);
+  font-size: var(--sizing-encapsulated-icon-xxl);
+}

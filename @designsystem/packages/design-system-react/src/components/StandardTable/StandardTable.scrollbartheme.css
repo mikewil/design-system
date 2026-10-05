@@ -1,0 +1,55 @@
+.table-scrollbar-theme {
+  --os-size: 8px;
+  /* // The axis-perpendicular padding of the scrollbar (horizontal: padding-y, vertical: padding-x) */
+  --os-padding-perpendicular: 3px;
+  /* // The axis padding of the scrollbar (horizontal: padding-x, vertical: padding-y) */
+  --os-padding-axis: 0;
+  /* // The border radius of the scrollbar track */
+  --os-track-border-radius: 8px;
+  /* // The background of the scrollbar track */
+  --os-track-bg: none;
+  /* // The :hover background of the scrollbar track */
+  --os-track-bg-hover: none;
+  /* // The :active background of the scrollbar track */
+  --os-track-bg-active: none;
+  /* // The border of the scrollbar track */
+  --os-track-border: none;
+  /* // The :hover background of the scrollbar track */
+  --os-track-border-hover: none;
+  /* // The :active background of the scrollbar track */
+  --os-track-border-active: none;
+  /* // The border radius of the scrollbar handle */
+  --os-handle-border-radius: 8px;
+  /* // The background of the scrollbar handle */
+  --os-handle-bg: #e7e7e7;
+  /* // The :hover background of the scrollbar handle */
+  --os-handle-bg-hover: #a3a3a3;
+  /* // The :active background of the scrollbar handle */
+  --os-handle-bg-active: #a3a3a3;
+  /* // The border of the scrollbar handle */
+  --os-handle-border: none;
+  /* // The :hover border of the scrollbar handle */
+  --os-handle-border-hover: none;
+  /* // The :active border of the scrollbar handle */
+  --os-handle-border-active: none;
+  /* // The min size of the scrollbar handle */
+  --os-handle-min-size: 33px;
+  /* // The max size of the scrollbar handle */
+  --os-handle-max-size: none;
+  /* // The axis-perpendicular size of the scrollbar handle (horizontal: height, vertical: width) */
+  --os-handle-perpendicular-size: 100%;
+  /* // The :hover axis-perpendicular size of the scrollbar handle (horizontal: height, vertical: width) */
+  --os-handle-perpendicular-size-hover: 100%;
+  /* // The :active axis-perpendicular size of the scrollbar handle (horizontal: height, vertical: width) */
+  --os-handle-perpendicular-size-active: 100%;
+  /* // Increases the interactive area of the scrollbar handle. */
+  --os-handle-interactive-area-offset: 1;
+}
+
+.os-scrollbar-vertical {
+  margin-top: 53px;
+  margin-bottom: 3px;
+}
+.os-scrollbar-vertical .os-scrollbar-handle:before {
+  width: 20px;
+}

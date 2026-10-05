@@ -1,0 +1,83 @@
+@import './../../theme.css';
+
+.solidDropdown {
+  width: 276px;
+  height: 40px;
+  background-color: var(--color-neutrals-0);
+  padding: var(--spacing-spacing-2) var(--spacing-spacing-3);
+  border-width: 0px;
+
+  &:active,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+}
+
+.solidDropdownButton {
+  border-radius: var(--radii-radius-m);
+  border-width: 0px;
+  &:active,
+  &:focus {
+    border: none;
+    outline: none;
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: var(--color-neutrals-100);
+}
+
+.solidDropdownButtonOpened {
+  box-shadow: 0px var(--shadows-shadow-level1-down, 3px)
+    var(--shadows-shadow-level1-blur, 6px) 0px rgba(0, 0, 0, 0.15);
+  background-color: var(--color-neutrals-0);
+}
+
+.solidDropdownContainer {
+  border-radius: var(--radii-radius-l);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-width: 0px;
+  outline: none;
+}
+
+.solidDropdownListboxItem:first-child {
+  border-top-left-radius: var(--radii-radius-l);
+  border-top-right-radius: var(--radii-radius-l);
+}
+
+.solidDropdownListboxItem:last-child {
+  border-bottom-left-radius: var(--radii-radius-l);
+  border-bottom-right-radius: var(--radii-radius-l);
+}
+
+.solidDropdownListboxItem {
+  width: 252px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-bottom: 1px solid var(--general-divider);
+  &:focus {
+    border-bottom: 1px solid var(--general-divider);
+  }
+}
+
+.solidDropdownSelectionDiv {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.caretIcon {
+  transition: transform 0.3s ease-out;
+  transform: rotate(180deg);
+  transform-origin: center;
+  stroke-dasharray: none;
+}
+
+.caretIconOpen {
+  transition: transform 0.3s ease-out;
+  transform: rotate(360deg);
+  transform-origin: center;
+}

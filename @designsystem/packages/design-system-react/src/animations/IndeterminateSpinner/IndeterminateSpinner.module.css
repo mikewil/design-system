@@ -1,0 +1,29 @@
+@import './../../theme.css';
+
+.progressSpinner {
+    display: grid;
+    grid-template-areas:
+        'label value'
+        'bar bar';
+    grid-template-columns: 1fr auto;
+    gap: 4px;
+    width: 250px;
+    color: var(--text-color);
+
+    .value {
+        grid-area: value;
+    }
+}
+
+.rotateProgressSpinner {
+    animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
